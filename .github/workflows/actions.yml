@@ -1,0 +1,20 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  checks: write
+  pull-requests: write
+
+jobs:
+  contracts:
+    name: Contracts
+    uses: multiversx/mx-sc-actions/.github/workflows/contracts.yml@bf87a51becb9850966bf63d8695a8b2230f28e62
+    with:
+      rust-toolchain: nightly-2024-04-01
+    secrets:
+      token: ${{ secrets.GITHUB_TOKEN }}
