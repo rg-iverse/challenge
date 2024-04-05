@@ -12,7 +12,13 @@ pub enum Status {
 #[multiversx_sc::contract]
 pub trait Crowdfunding {
     #[init]
-    fn init(&self, target: BigUint, deadline: u64, token_identifier: EgldOrEsdtTokenIdentifier) {
+    fn init(
+        &self,
+        target: BigUint,
+        deadline: u64,
+        minimum: u64,
+        token_identifier: EgldOrEsdtTokenIdentifier,
+    ) {
         require!(target > 0, "Target must be more than 0");
         self.target().set(target);
 
@@ -75,7 +81,7 @@ pub trait Crowdfunding {
 
                 self.send()
                     .direct(&caller, &token_identifier, 0, &sc_balance);
-            },
+            }
             Status::Failed => {
                 let caller = self.blockchain().get_caller();
                 let deposit = self.deposit(&caller).get();
@@ -86,7 +92,7 @@ pub trait Crowdfunding {
                     self.deposit(&caller).clear();
                     self.send().direct(&caller, &token_identifier, 0, &deposit);
                 }
-            },
+            }
         }
     }
 
